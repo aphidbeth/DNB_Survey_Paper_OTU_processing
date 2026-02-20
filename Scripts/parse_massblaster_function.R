@@ -99,7 +99,7 @@ massBLASTer_to_tax_table <- function(massblaster_html){
     # Combine all results into a single table
     results_df <- bind_rows(results_list)
 
-
+    print(colnames(results_df))
 
     #==============================================================
     # STEP 2: Fill in the higher taxonomic levels for the blast hits
@@ -300,8 +300,8 @@ massBLASTer_to_tax_table <- function(massblaster_html){
         }
       ) %>%
       select(-.printed) %>%
-      slice(1) %>%
-      rename(MostFreqTaxon = Taxon) %>%
+      slice_head(n=1) %>%
+      dplyr::rename(MostFreqTaxon = Taxon) %>%
       ungroup()
   }
 
@@ -311,18 +311,18 @@ massBLASTer_to_tax_table <- function(massblaster_html){
   
   massblaster_per_query <- results_df_w_tax_f_ordered %>%
     group_by(query_id)%>%
-    slice(1) %>%
+    slice_head(n = 1) %>%
     ungroup()
  
-  merged_approaches <- left_join(top_tally, massblaster_per_query) %>% 
-    select(query_id, MostFreqTaxon, Taxon) %>% rename(HighestScoreTaxon = Taxon)
+  merged_approaches <- merge(top_tally, massblaster_per_query) %>% 
+    select(query_id, MostFreqTaxon, Taxon) %>% dplyr::rename(HighestScoreTaxon = Taxon)
 
   print("\nMerged Approaches:\n")
   print(merged_approaches)
   print("\n proceeding with Highest Scoring Taxon\n")
   
   # Rename the massblaster cols to prevent column conflicts when merging:
-  massblaster_per_query <- massblaster_per_query %>% rename(OTU_string = query_id,
+  massblaster_per_query <- massblaster_per_query %>% dplyr::rename(OTU_string = query_id,
                                                             Kingdom = kingdom,
                                                             Phylum = phylum,
                                                             Class = class,

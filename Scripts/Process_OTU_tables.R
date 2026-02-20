@@ -25,6 +25,7 @@ library("microbiome"); packageVersion("microbiome")
 library("xml2"); packageVersion("xml2")
 library("rgbif"); packageVersion("rgbif")
 library( "rvest"); packageVersion( "rvest")
+library("DECIPHER"); packageVersion("DECIPHER")
 
 # > library("tidyverse"); packageVersion("tidyverse")
 # [1] ‘2.0.0’
@@ -42,6 +43,8 @@ library( "rvest"); packageVersion( "rvest")
 # [1] ‘3.8.4’
 # > library( "rvest"); packageVersion( "rvest")
 # [1] ‘1.0.4’
+# > library("DECIPHER"); packageVersion("DECIPHER")
+# [1] ‘3.2.0’
 
 # R.version
 # _                                
@@ -155,24 +158,24 @@ Sirococcus_sklearn_tt <- all_taxa %>% filter(Genus %in% "Sirococcus") %>% mutate
 
 # Write fasta files per genus:
 
-write_nc_fasta <- function(nc_genus, sequences_file, tax_table) {
-  
-  select_taxa <- filter(tax_table, Genus %in% nc_genus)
-  
-  select_seqs <- filter(sequences, id %in% select_taxa$id)
-  
-  genus_fasta <- as.vector(rbind(paste0(">", select_seqs$id), select_seqs$Sequence))
-  
-  outfile <- paste0("Data/Potential_Needle_Cast_Seqs/", nc_genus, ".fasta")
-  
-  message("Writing fasta file: ", outfile)
-  
-  writeLines(genus_fasta, outfile)
-}
-
-
-# Apply to all the potential needle cast Genus
-lapply(Genus_of_interest, write_nc_fasta, sequences = sequences, tax_table = all_taxa)
+# write_nc_fasta <- function(nc_genus, sequences_file, tax_table) {
+#   
+#   select_taxa <- filter(tax_table, Genus %in% nc_genus)
+#   
+#   select_seqs <- filter(sequences, id %in% select_taxa$id)
+#   
+#   genus_fasta <- as.vector(rbind(paste0(">", select_seqs$id), select_seqs$Sequence))
+#   
+#   outfile <- paste0("Data/Potential_Needle_Cast_Seqs/", nc_genus, ".fasta")
+#   
+#   message("Writing fasta file: ", outfile)
+#   
+#   writeLines(genus_fasta, outfile)
+# }
+# 
+# 
+# # Apply to all the potential needle cast Genus
+# lapply(Genus_of_interest, write_nc_fasta, sequences = sequences, tax_table = all_taxa)
 
 #===============================================================================
 # 3) MASSBLASTER
@@ -266,6 +269,14 @@ write.csv(df_for_verification, "Data/Needle_cast_OTUs_for_manual_verification_EM
 #  interactive viewer from DECIPHER to help with decision making:
 source("Scripts/Prep_alignment_function.R")
 
+##----INTERACTIVE VERSIONS-----------------------------------------------------------------
+# Used for looking at each OTU with Doth 
+subset_df <- filter(sequences, id == "c5f4cc5548cbc1cbe8a7fcc3e525d9be")
+raw_seq <- subset_df$Sequence
+prep_alignment("DQ926955.1", "AY808302.2", raw_seq) %>% BrowseSeqs()
+##-----------------------------------------------------------------------------------------
+
+
 # Comparison of Coleosporium_tussilaginis and Coleosporium_clematidis ITS2 seqs from culture collections:
 subset_df <- filter(df_for_verification, OTU_string == "b393a92eb102f3acd011a341080fac70")
 raw_seq <- subset_df$raw_seq
@@ -330,10 +341,24 @@ match_OTU_to_concensus_taxa <- function(phyloseq_object, all_nc_results_df) {
   return(phyloseq_object)
 }
 
-T1_min_clean_RA_verified <- match_OTU_to_concensus_taxa(T1_min_clean_RA, all_nc_results)
-T2_min_clean_RA_verified <- match_OTU_to_concensus_taxa(T2_min_clean_RA, all_nc_results)
-T3_min_clean_RA_verified <- match_OTU_to_concensus_taxa(T3_min_clean_RA, all_nc_results)
+# Also manually replace the consensus for other Dothistroma hits to Dothistroma_sp given the lack of variation between the ITS2 regions
+replace_doth <- function(phyloseq_object) {
+  taxa_phyloseq <- as.data.frame(tax_table(phyloseq_object))
+  taxa_phyloseq$concensus_taxa[taxa_phyloseq$Genus == "Dothistroma"] <- "Dothistroma_sp"  
+  tax_table(phyloseq_object) <- as.matrix(taxa_phyloseq)
+  return(phyloseq_object)
+}
 
+
+T1_min_clean_RA_verified <- match_OTU_to_concensus_taxa(T1_min_clean_RA, all_nc_results) %>%
+                            replace_doth(.)
+T2_min_clean_RA_verified <- match_OTU_to_concensus_taxa(T2_min_clean_RA, all_nc_results) %>%
+                            replace_doth(.)
+T3_min_clean_RA_verified <- match_OTU_to_concensus_taxa(T3_min_clean_RA, all_nc_results) %>%
+                            replace_doth(.)
+
+# Quick check of phyloseqs taxa:
+T1_min_clean_RA_verified %>% subset_taxa(Genus == "Dothistroma") %>% plot_bar(fill = "concensus_taxa")
 
 # Also add the concensus column to the sequences df:
 
@@ -343,15 +368,16 @@ sequences_mod <- sequences %>%
 #==========================================================================================================
 # SUMMARISE proportion of needle cast pathogens by species:
 
-concensus_taxa_of_interest <- c("Dothistroma_septosporum",
+concensus_taxa_of_interest <- c("Dothistroma_sp",
                                 "Lophodermium_seditiosum",
+                                "Lophodermium_conigenum",
                                 "Lophodermella_sulcigena",
                                 "Coleosporium_tussilaginis",
                                 "Cyclaneusma_minus",
                                 "Gremmeniella_abietina",
                                 "Gremmenia_infestans",
                                 "Pachyramichloridium_pini",
-                                "Rhizosphaera_kalkoffi",
+                                "Rhizosphaera_kalkhoffii",
                                 "Sirococcus_piceicola")
 
 rel_abund_concensus_taxa <- function(phyloseq_object, concensus_taxa_of_interest) {
@@ -408,3 +434,14 @@ write.table(T1_nc_rel_abund, "Data/T1_relative_abundance_nc_taxa.tsv", quote = F
 write.table(T2_nc_rel_abund, "Data/T2_relative_abundance_nc_taxa.tsv", quote = FALSE)
 write.table(T3_nc_rel_abund, "Data/T3_relative_abundance_nc_taxa.tsv", quote = FALSE)
 
+
+#===============================================================================
+# Check abundance of Dothistroma reads: 
+
+# filter the original phyloseq object to only include the OTUs of interest
+prune_taxa("27c45c93626d5f7a03b951a9f3459a2d", T1_min_clean) %>% plot_bar(fill = "OTU")
+prune_taxa("34a36fd08aa3c27686c0cb1568914881", T1_min_clean) %>% plot_bar(fill = "OTU")
+prune_taxa("8e052f8bc08076b9ac7f22fa0c4575b9", T1_min_clean) %>% plot_bar(fill = "OTU")
+prune_taxa("8e052f8bc08076b9ac7f22fa0c4575b9", T2_min_clean) %>% plot_bar(fill = "OTU")
+prune_taxa("8e052f8bc08076b9ac7f22fa0c4575b9", T3_min_clean) %>% plot_bar(fill = "OTU")
+prune_taxa("94ebf675ee5e022772ce135751db8bb5", T3_min_clean) %>% plot_bar(fill = "OTU")
