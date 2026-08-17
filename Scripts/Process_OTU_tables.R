@@ -66,11 +66,11 @@ library("DECIPHER"); packageVersion("DECIPHER")
 
 
 # Import OTU tables
-# Note I have these saved locally but these can be downloaded from github using 
-# web browser and then imported into R: https://github.com/aphidbeth/PineBiomeDataPaper/tree/main/Metabarcoding/Data/OTU_tables
-T1_min_clean <- readRDS("C:/Users/BM43175/Documents/GitHub/PineBiomeDataPaper/Metabarcoding/Data/OTU_tables/T1_ITS_min_clean_OTU.rds")
-T2_min_clean <- readRDS("C:/Users/BM43175/Documents/GitHub/PineBiomeDataPaper/Metabarcoding/Data/OTU_tables/T2_ITS_min_clean_OTU.rds")
-T3_min_clean <- readRDS("C:/Users/BM43175/Documents/GitHub/PineBiomeDataPaper/Metabarcoding/Data/OTU_tables/T3_ITS_min_clean_OTU.rds")
+# These can be downloaded from zenodo repository: https://doi.org/10.5281/zenodo.20179422 
+
+T1_min_clean <- readRDS("~/OTU_tables/T1_ITS_min_clean_OTU.rds") # Edit filepaths as needed
+T2_min_clean <- readRDS("~/OTU_tables/T2_ITS_min_clean_OTU.rds")
+T3_min_clean <- readRDS("~/OTU_tables/T3_ITS_min_clean_OTU.rds")
 
 # Check these are phyloseq objects
 T1_min_clean
@@ -78,11 +78,11 @@ T2_min_clean
 T3_min_clean
 
 # Import the sequence tables 
-# Note: again these are saved locally but can be downloaded from github in a web browser
-# https://github.com/aphidbeth/PineBiomeDataPaper/tree/main/Metabarcoding/Data
-T1_seqs <- read.table("C:/Users/BM43175/Documents/GitHub/PineBiomeDataPaper/Metabarcoding/Data/seqs-and-taxonomy_T1_ITS.tsv", header = TRUE)
-T2_seqs <- read.table("C:/Users/BM43175/Documents/GitHub/PineBiomeDataPaper/Metabarcoding/Data/seqs-and-taxonomy_T2_ITS.tsv", header = TRUE)
-T3_seqs <- read.table("C:/Users/BM43175/Documents/GitHub/PineBiomeDataPaper/Metabarcoding/Data/seqs-and-taxonomy_T3_ITS.tsv", header = TRUE)
+# These can be downloaded from zenodo repository: https://doi.org/10.5281/zenodo.20179422 
+
+T1_seqs <- read.table("~/seqs-and-taxonomy_T1_ITS.tsv", header = TRUE) # Edit filepaths as needed
+T2_seqs <- read.table("~/seqs-and-taxonomy_T2_ITS.tsv", header = TRUE)
+T3_seqs <- read.table("~/seqs-and-taxonomy_T3_ITS.tsv", header = TRUE)
 
 # Merge into a single sequence file for easy use
 sequences <- rbind(T1_seqs, T2_seqs, T3_seqs) %>% unique()
