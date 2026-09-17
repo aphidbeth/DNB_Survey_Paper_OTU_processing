@@ -446,3 +446,17 @@ prune_taxa("8e052f8bc08076b9ac7f22fa0c4575b9", T1_min_clean) %>% plot_bar(fill =
 prune_taxa("8e052f8bc08076b9ac7f22fa0c4575b9", T2_min_clean) %>% plot_bar(fill = "OTU")
 prune_taxa("8e052f8bc08076b9ac7f22fa0c4575b9", T3_min_clean) %>% plot_bar(fill = "OTU")
 prune_taxa("94ebf675ee5e022772ce135751db8bb5", T3_min_clean) %>% plot_bar(fill = "OTU")
+
+#===============================================================================
+# Final Dataframe curation for use in molecular validation
+
+# The final dataframe underwent some manual curation in excel before being save as a
+# csv. This took the Data/T3_relative_abundance_nc_taxa.tsv and:
+# - Removed of non tree samples
+# - Rounding the number of decimal places
+# - Converted the sample names to just keep the 4 digit identifiers
+# - Reordered the columns
+# - Changed "Dothistroma_sp" to "Dothistroma_septosporum"
+
+# Output saved as FinalRelativeAbundances.csv
+

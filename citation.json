@@ -1,0 +1,82 @@
+[
+  {
+    "person_or_org": {
+      "type": "personal",
+      "family_name": "Moore",
+      "given_name": "Beth"
+    },
+    "affiliations": [{ "name": "The James Hutton Institute, Dundee, UK" }]
+  },
+  {
+    "person_or_org": {
+      "type": "personal",
+      "family_name": "Perry",
+      "given_name": "Annika"
+    },
+    "affiliations": [{ "name": "UK Centre for Ecology & Hydrology, Penicuik, UK" }]
+  },
+  {
+    "person_or_org": {
+      "type": "personal",
+      "family_name": "Jones",
+      "given_name": "Susan"
+    },
+    "affiliations": [{ "name": "The James Hutton Institute, Dundee, UK" }]
+  },
+  {
+    "person_or_org": {
+      "type": "personal",
+      "family_name": "Kaur",
+      "given_name": "Sundeep"
+    },
+    "affiliations": [{ "name": "Forest Research, Alice Holt Lodge, Surrey, UK" }]
+  },
+  {
+    "person_or_org": {
+      "type": "personal",
+      "family_name": "Crampton",
+      "given_name": "Bridget"
+    },
+    "affiliations": [{ "name": "Forest Research, Alice Holt Lodge, Surrey, UK" }]
+  },
+  {
+    "person_or_org": {
+      "type": "personal",
+      "family_name": "Gurung",
+      "given_name": "Amir"
+    },
+    "affiliations": [{ "name": "Forest Research, Alice Holt Lodge, Surrey, UK" }]
+  },
+  {
+    "person_or_org": {
+      "type": "personal",
+      "family_name": "Stockan",
+      "given_name": "Jenni"
+    },
+    "affiliations": [{ "name": "The James Hutton Institute, Dundee, UK" }]
+  },
+  {
+    "person_or_org": {
+      "type": "personal",
+      "family_name": "Cottrell",
+      "given_name": "Joan"
+    },
+    "affiliations": [{ "name": "Forest Research, Alice Holt Lodge, Surrey, UK" }]
+  },
+  {
+    "person_or_org": {
+      "type": "personal",
+      "family_name": "Beaton",
+      "given_name": "Joan"
+    },
+    "affiliations": [{ "name": "The James Hutton Institute, Dundee, UK" }]
+  },
+  {
+    "person_or_org": {
+      "type": "personal",
+      "family_name": "Cavers",
+      "given_name": "Stephen"
+    },
+    "affiliations": [{ "name": "UK Centre for Ecology & Hydrology, Penicuik, UK" }]
+  }
+]
